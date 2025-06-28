@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AuthAction, AuthPrompt } from "@/types/enums";
 
 export default function Home() {
-  const [isSignIn, setIsSignIn] = useState(true);
+  const [isSignIn, setIsSignIn] = useState<boolean>(true);
 
   const title = isSignIn ? AuthAction.SignIn : AuthAction.Register;
   const actionColor = isSignIn
