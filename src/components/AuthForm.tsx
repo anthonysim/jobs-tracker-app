@@ -4,14 +4,15 @@ import type { AuthType } from "../types/types";
 import { supabase } from "../utils/supabaseClient";
 import GenericForm from "../components/forms/GenericForm";
 
-const fields = {
-  email: { type: "email", placeholder: "Email" },
-  password: { type: "password", placeholder: "Password" },
-};
-
 export default function AuthForm() {
   const [isSignIn, setIsSignIn] = useState(false);
   const [message, setMessage] = useState("");
+
+  // fields for the GenericForm
+  const fields = {
+    email: { type: "email", placeholder: "Email" },
+    password: { type: "password", placeholder: "Password" },
+  };
 
   const title = isSignIn ? AuthAction.SignIn : AuthAction.Register;
 
