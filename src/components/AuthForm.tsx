@@ -24,6 +24,15 @@ export default function AuthForm() {
     ? AuthPrompt.NoAccount
     : AuthPrompt.AlreadyHaveAccount;
 
+  const button = (
+    <button
+      type="submit"
+      className={`w-full py-2 font-semibold text-white transition rounded ${actionColor || "bg-blue-600 hover:bg-blue-700"}`}
+    >
+      {title}
+    </button>
+  );
+
   const footer = (
     <div className="pt-2 text-center">
       <button
@@ -71,8 +80,8 @@ export default function AuthForm() {
         onSubmit={handleAuth}
         appName={"Jobs Tracker App"}
         title={title}
+        button={button}
         buttonText={title}
-        buttonClassName={actionColor}
         footer={footer}
       />
 

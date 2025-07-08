@@ -9,9 +9,9 @@ type Props = {
   fields: Record<string, Field>;
   onSubmit: (values: Record<string, string>) => void;
   title: string;
+  button: React.ReactNode;
   appName?: string;
   buttonText?: string;
-  buttonClassName?: string;
   footer?: React.ReactNode;
 };
 
@@ -20,8 +20,7 @@ export default function GenericForm({
   onSubmit,
   title,
   appName,
-  buttonText = "Submit",
-  buttonClassName,
+  button,
   footer,
 }: Props) {
   const [values, setValues] = useState<Record<string, string>>(
@@ -57,12 +56,7 @@ export default function GenericForm({
             className="w-full px-4 py-2 placeholder-gray-400 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         ))}
-        <button
-          type="submit"
-          className={`w-full py-2 font-semibold text-white transition rounded ${buttonClassName || "bg-blue-600 hover:bg-blue-700"}`}
-        >
-          {buttonText}
-        </button>
+        {button}
         {footer}
       </form>
     </div>
