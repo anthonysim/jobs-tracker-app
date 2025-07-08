@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import { AuthAction, AuthPrompt } from "./types/types";
+import { AuthAction, AuthPrompt } from "./constants/authConstants";
+import type { AuthType } from "./types/types";
 // import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "./utils/supabaseClient";
 
@@ -10,31 +11,30 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); // ✅ Added message state
 
-  // Signup handler
-  const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage("Signup successful! Please check your email to confirm.");
-      console.log("User signed up:", data);
-    }
-  };
+  const handleAuth = async (
+    type: AuthType,
+    email: string,
+    password: string
+  ) => {
+    const authFn =
+      type === "signUp"
+        ? supabase.auth.signUp
+        : supabase.auth.signInWithPassword;
 
-  // Sign-in handler
-  const handleSignIn = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data, error } = await authFn({ email, password });
 
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage("Signed in successfully!");
+      const successMsg =
+        type === "signUp"
+          ? "Signup successful! Please check your email to confirm."
+          : "Signed in successfully!";
+      setMessage(successMsg);
+
+      if (type === "signUp") {
+        console.log("User signed up:", data);
+      }
     }
   };
 
@@ -73,7 +73,9 @@ export default function App() {
 
           <button
             className={`w-full py-2 rounded text-white font-semibold transition ${actionColor}`}
-            onClick={isSignIn ? handleSignIn : () => signUp(email, password)}
+            onClick={() =>
+              handleAuth(isSignIn ? "signUp" : "signIn", email, password)
+            }
           >
             {title}
           </button>
