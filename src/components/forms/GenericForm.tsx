@@ -8,7 +8,6 @@ type Field = {
 type Props = {
   fields: Record<string, Field>;
   onSubmit: (values: Record<string, string>) => void;
-
   title: string;
   appName?: string;
   buttonText?: string;
