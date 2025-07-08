@@ -24,6 +24,20 @@ export default function AuthForm() {
     ? AuthPrompt.NoAccount
     : AuthPrompt.AlreadyHaveAccount;
 
+  const footer = (
+    <div className="pt-2 text-center">
+      <button
+        className="text-sm text-blue-400 hover:underline"
+        onClick={() => {
+          setIsSignIn((prev) => !prev);
+          setMessage("");
+        }}
+      >
+        {toggleText}
+      </button>
+    </div>
+  );
+
   // supbase auth
   const handleAuth = async ({ email, password }: Record<string, string>) => {
     const type: AuthType = isSignIn ? "signIn" : "signUp";
@@ -52,33 +66,17 @@ export default function AuthForm() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-6 text-white sm:p-12">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 border border-gray-800 shadow-lg rounded-2xl">
-        <h1 className="text-3xl font-semibold text-center">Jobs Tracker App</h1>
-        <h2 className="text-xl font-medium text-center">{title}</h2>
+      <GenericForm
+        fields={fields}
+        onSubmit={handleAuth}
+        appName={"Jobs Tracker App"}
+        title={title}
+        buttonText={title}
+        buttonClassName={actionColor}
+        footer={footer}
+      />
 
-        <GenericForm
-          fields={fields}
-          onSubmit={handleAuth}
-          buttonText={title}
-          buttonClassName={actionColor}
-        />
-
-        {message && (
-          <p className="text-sm text-center text-red-400">{message}</p>
-        )}
-
-        <div className="pt-2 text-center">
-          <button
-            className="text-sm text-blue-400 hover:underline"
-            onClick={() => {
-              setIsSignIn((prev) => !prev);
-              setMessage("");
-            }}
-          >
-            {toggleText}
-          </button>
-        </div>
-      </div>
+      {message && <p className="text-sm text-center text-red-400">{message}</p>}
     </div>
   );
 }
