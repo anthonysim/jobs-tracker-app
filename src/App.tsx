@@ -2,22 +2,41 @@ import { useState } from "react";
 import "./App.css";
 import { AuthAction, AuthPrompt } from "./types/types";
 // import { useNavigate } from "@tanstack/react-router";
-// import { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "./utils/supabaseClient";
 
 export default function App() {
   const [isSignIn, setIsSignIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const navigate = useNavigate();
+  const [message, setMessage] = useState(""); // ✅ Added message state
 
-  // const signUp = async (email: string, password: string) => {
-  //   const { data, error } = await supabase.auth.signUp({ email, password });
-  //   if (error) {
-  //     console.error(error.message);
-  //   } else {
-  //     console.log("User signed up:", data);
-  //   }
-  // };
+  // Signup handler
+  const signUp = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Signup successful! Please check your email to confirm.");
+      console.log("User signed up:", data);
+    }
+  };
+
+  // Sign-in handler
+  const handleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Signed in successfully!");
+    }
+  };
 
   const title = isSignIn ? AuthAction.SignIn : AuthAction.Register;
   const actionColor = isSignIn
@@ -32,7 +51,6 @@ export default function App() {
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 border border-gray-800 shadow-lg rounded-2xl">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-semibold">Jobs Tracker App</h1>
-          <p className="text-sm text-gray-400"></p>
         </div>
 
         <div className="space-y-4">
@@ -55,16 +73,24 @@ export default function App() {
 
           <button
             className={`w-full py-2 rounded text-white font-semibold transition ${actionColor}`}
-            onClick={() => console.log("")}
+            onClick={isSignIn ? handleSignIn : () => signUp(email, password)}
           >
             {title}
           </button>
+
+          {/* ✅ Show success/error message */}
+          {message && (
+            <p className="text-sm text-center text-red-400">{message}</p>
+          )}
         </div>
 
         <div className="pt-2 text-center">
           <button
             className="text-sm text-blue-400 hover:underline"
-            onClick={() => setIsSignIn((prev) => !prev)}
+            onClick={() => {
+              setIsSignIn((prev) => !prev);
+              setMessage(""); // Clear message when switching modes
+            }}
           >
             {toggleText}
           </button>
