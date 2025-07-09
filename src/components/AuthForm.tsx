@@ -16,20 +16,16 @@ export default function AuthForm() {
 
   const title = isSignIn ? AuthAction.SignIn : AuthAction.Register;
 
-  const actionColor = isSignIn
-    ? "bg-red-600 hover:bg-red-700"
-    : "bg-orange-500 hover:bg-orange-600";
-
-  const toggleText = isSignIn
-    ? AuthPrompt.NoAccount
-    : AuthPrompt.AlreadyHaveAccount;
-
   const button = (
     <button
       type="submit"
-      className={`w-full py-2 font-semibold text-white transition rounded ${actionColor || "bg-blue-600 hover:bg-blue-700"}`}
+      className={`w-full py-2 font-semibold text-white transition rounded ${
+        isSignIn
+          ? "bg-blue-600 hover:bg-blue-700"
+          : "bg-red-600 hover:bg-red-700"
+      }`}
     >
-      {title}
+      {isSignIn ? AuthAction.SignIn : AuthAction.Register}
     </button>
   );
 
@@ -42,7 +38,7 @@ export default function AuthForm() {
           setMessage("");
         }}
       >
-        {toggleText}
+        {isSignIn ? AuthPrompt.NoAccount : AuthPrompt.AlreadyHaveAccount}
       </button>
     </div>
   );
@@ -79,7 +75,6 @@ export default function AuthForm() {
         fields={fields}
         onSubmit={handleAuth}
         appName={"Jobs Tracker App"}
-        title={title}
         button={button}
         buttonText={title}
         footer={footer}

@@ -8,7 +8,6 @@ type Field = {
 type Props = {
   fields: Record<string, Field>;
   onSubmit: (values: Record<string, string>) => void;
-  title: string;
   button: React.ReactNode;
   appName?: string;
   buttonText?: string;
@@ -18,7 +17,6 @@ type Props = {
 export default function GenericForm({
   fields,
   onSubmit,
-  title,
   appName,
   button,
   footer,
@@ -42,8 +40,6 @@ export default function GenericForm({
       <h1 className="text-3xl font-semibold text-center text-white">
         {appName}
       </h1>
-      <h2 className="text-xl font-medium text-center">{title}</h2>
-      <br />
       <form className="space-y-4" onSubmit={handleSubmit}>
         {Object.entries(fields).map(([name, config]) => (
           <input
