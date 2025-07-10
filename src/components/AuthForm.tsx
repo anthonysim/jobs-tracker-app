@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { AuthAction, AuthPrompt } from "../constants/authConstants";
-import type { AuthType } from "../types/types";
 import { supabase } from "../utils/supabaseClient";
 import GenericForm from "../components/forms/GenericForm";
 
@@ -45,27 +44,29 @@ export default function AuthForm() {
 
   // supbase auth
   const handleAuth = async ({ email, password }: Record<string, string>) => {
-    const type: AuthType = isSignIn ? "signIn" : "signUp";
+    let data, error;
 
-    const authFn =
-      type === "signUp"
-        ? supabase.auth.signUp
-        : supabase.auth.signInWithPassword;
-
-    const { data, error } = await authFn({ email, password });
+    if (isSignIn) {
+      ({ data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      }));
+    } else {
+      ({ data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      }));
+    }
 
     if (error) {
       setMessage(error.message);
     } else {
-      const successMsg =
-        type === "signUp"
-          ? "Signup successful! Please check your email to confirm."
-          : "Signed in successfully!";
-      setMessage(successMsg);
-
-      if (type === "signUp") {
-        console.log("User signed up:", data);
-      }
+      setMessage(
+        isSignIn
+          ? "Signed in successfully!"
+          : "Signup successful! Please check your email to confirm."
+      );
+      console.log("Auth success:", data);
     }
   };
 
