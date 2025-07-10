@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { AuthAction, AuthPrompt } from "../constants/authConstants";
-import { supabase } from "../utils/supabaseClient";
+import { handleLogin, handleRegister } from "../utils/auth";
 import GenericForm from "../components/forms/GenericForm";
 
 export default function AuthForm() {
   const [isSignIn, setIsSignIn] = useState(false);
-  const [message, setMessage] = useState("");
 
   // fields for the GenericForm
   const fields = {
@@ -32,56 +31,23 @@ export default function AuthForm() {
     <div className="pt-2 text-center">
       <button
         className="text-sm text-blue-400 hover:underline"
-        onClick={() => {
-          setIsSignIn((prev) => !prev);
-          setMessage("");
-        }}
+        onClick={() => setIsSignIn((prev) => !prev)}
       >
         {isSignIn ? AuthPrompt.NoAccount : AuthPrompt.AlreadyHaveAccount}
       </button>
     </div>
   );
-
-  // supbase auth
-  const handleAuth = async ({ email, password }: Record<string, string>) => {
-    let data, error;
-
-    if (isSignIn) {
-      ({ data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      }));
-    } else {
-      ({ data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      }));
-    }
-
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage(
-        isSignIn
-          ? "Signed in successfully!"
-          : "Signup successful! Please check your email to confirm."
-      );
-      console.log("Auth success:", data);
-    }
-  };
-
+  // return
   return (
     <div className="flex items-center justify-center min-h-screen p-6 text-white sm:p-12">
       <GenericForm
         fields={fields}
-        onSubmit={handleAuth}
+        onSubmit={isSignIn ? handleLogin : handleRegister}
         appName={"Jobs Tracker App"}
         button={button}
         buttonText={title}
         footer={footer}
       />
-
-      {message && <p className="text-sm text-center text-red-400">{message}</p>}
     </div>
   );
 }
