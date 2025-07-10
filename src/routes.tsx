@@ -8,6 +8,7 @@ import {
 
 import App from "./App";
 import { JobsList } from "./pages/JobsList";
+import { supabase } from "./utils/supabaseClient";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -27,13 +28,17 @@ const todosRoute = createRoute({
   path: "/jobslist",
   getParentRoute: () => rootRoute,
   component: JobsList,
-  // loader: async () => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     throw redirect({ to: "/" }); // not logged in
-  //   }
-  //   return null;
-  // },
+  loader: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw redirect({ to: "/" });
+    }
+
+    return null;
+  },
 });
 
 const routeTree = rootRoute.addChildren([homeRoute, todosRoute]);

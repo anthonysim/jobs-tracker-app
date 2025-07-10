@@ -1,10 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { AuthAction, AuthPrompt } from "../constants/authConstants";
 import { handleLogin, handleRegister } from "../utils/auth";
 import GenericForm from "../components/forms/GenericForm";
 
 export default function AuthForm() {
   const [isSignIn, setIsSignIn] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit = async (values: Record<string, string>) => {
+    const success = isSignIn
+      ? await handleLogin(values)
+      : await handleRegister(values);
+
+    if (success) {
+      navigate({ to: "/jobslist" });
+    }
+  };
 
   const button = (
     <button
@@ -33,11 +45,12 @@ export default function AuthForm() {
   return (
     <div className="flex items-center justify-center min-h-screen p-6 text-white sm:p-12">
       <GenericForm
+        key={isSignIn ? "login" : "register"} // 👈 Force re-render
         fields={{
           email: { type: "email", placeholder: "Email" },
           password: { type: "password", placeholder: "Password" },
         }}
-        onSubmit={isSignIn ? handleLogin : handleRegister}
+        onSubmit={onSubmit}
         appName={"Jobs Tracker App"}
         button={button}
         buttonText={isSignIn ? AuthAction.SignIn : AuthAction.Register}
