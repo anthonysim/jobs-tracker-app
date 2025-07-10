@@ -6,14 +6,6 @@ import GenericForm from "../components/forms/GenericForm";
 export default function AuthForm() {
   const [isSignIn, setIsSignIn] = useState(false);
 
-  // fields for the GenericForm
-  const fields = {
-    email: { type: "email", placeholder: "Email" },
-    password: { type: "password", placeholder: "Password" },
-  };
-
-  const title = isSignIn ? AuthAction.SignIn : AuthAction.Register;
-
   const button = (
     <button
       type="submit"
@@ -37,15 +29,18 @@ export default function AuthForm() {
       </button>
     </div>
   );
-  // return
+
   return (
     <div className="flex items-center justify-center min-h-screen p-6 text-white sm:p-12">
       <GenericForm
-        fields={fields}
+        fields={{
+          email: { type: "email", placeholder: "Email" },
+          password: { type: "password", placeholder: "Password" },
+        }}
         onSubmit={isSignIn ? handleLogin : handleRegister}
         appName={"Jobs Tracker App"}
         button={button}
-        buttonText={title}
+        buttonText={isSignIn ? AuthAction.SignIn : AuthAction.Register}
         footer={footer}
       />
     </div>
