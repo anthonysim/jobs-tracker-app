@@ -1,12 +1,12 @@
 import { supabase } from "./supabaseClient";
 import { useNavigate } from "@tanstack/react-router";
 
-const navigate = useNavigate();
-
 export const handleLogin = async ({
   email,
   password,
 }: Record<string, string>) => {
+  const navigate = useNavigate();
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -25,6 +25,8 @@ export const handleRegister = async ({
   email,
   password,
 }: Record<string, string>) => {
+  const navigate = useNavigate();
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-router";
 
 import App from "./App";
-import { JobsList } from "./components/JobsList";
+import { JobsList } from "./pages/JobsList";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -27,13 +27,13 @@ const todosRoute = createRoute({
   path: "/jobslist",
   getParentRoute: () => rootRoute,
   component: JobsList,
-  loader: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw redirect({ to: "/" }); // not logged in
-    }
-    return null;
-  },
+  // loader: async () => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     throw redirect({ to: "/" }); // not logged in
+  //   }
+  //   return null;
+  // },
 });
 
 const routeTree = rootRoute.addChildren([homeRoute, todosRoute]);
