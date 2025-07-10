@@ -1,4 +1,7 @@
 import { supabase } from "./supabaseClient";
+import { useNavigate } from "@tanstack/react-router";
+
+const navigate = useNavigate();
 
 export const handleLogin = async ({
   email,
@@ -15,6 +18,7 @@ export const handleLogin = async ({
   }
   console.log("Signed in successfully!");
   console.log("Auth success:", data);
+  navigate({ to: "/jobslist" }); // ✅ Redirect
 };
 
 export const handleRegister = async ({
@@ -38,4 +42,5 @@ export const handleRegister = async ({
 
   console.log("Signup successful! Please check your email to confirm.");
   console.log("Auth success:", data);
+  navigate({ to: "/jobslist" }); // ✅ Redirect
 };
